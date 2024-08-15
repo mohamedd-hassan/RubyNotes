@@ -1,4 +1,4 @@
-package com.mohamed.rubynotes.Utils
+package com.mohamed.rubynotes.utils
 
 import android.content.ContentResolver
 import android.content.Context

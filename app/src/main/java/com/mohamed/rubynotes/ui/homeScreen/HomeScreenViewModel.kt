@@ -1,65 +1,42 @@
 package com.mohamed.rubynotes.ui.homeScreen
 
-import android.app.Application
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Room
-import com.mohamed.rubynotes.data.AppDatabase
 import com.mohamed.rubynotes.data.Note
-import com.mohamed.rubynotes.domain.NoteDaoImpl
-import com.mohamed.rubynotes.ui.addEditNote.NoteScreenState
+import com.mohamed.rubynotes.domain.NoteRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeScreenViewModel(application: Application): AndroidViewModel(application) {
-    private val database: AppDatabase
-    var state by mutableStateOf(NoteScreenState())
+@HiltViewModel
+class HomeScreenViewModel @Inject constructor(
+    private val noteRepository: NoteRepository
+): ViewModel() {
+
     init {
-        database = Room.databaseBuilder(
-            application,
-            AppDatabase::class.java,
-            "database"
-        ).build()
+        getNotesByTitle()
     }
-    private val noteDaoImpl = NoteDaoImpl(database.noteDao())
 
-    fun getNotesByTitle(): LiveData<List<Note>> = noteDaoImpl.getAllNotesByTitle()
-
-    fun insertNote(
-        title: String?,
-        body: String,
-        noteId: Int){
+    private val _notesScreen = MutableStateFlow(HomeScreenState())
+    val notesScreen = _notesScreen.asStateFlow()
+    private fun getNotesByTitle(){
         viewModelScope.launch {
-            if (noteId == -1){
-                noteDaoImpl.insertNote(
-                    Note(
-                        title = title,
-                        body = body,
-                        time = System.currentTimeMillis())
-                )
-            } else{
-                noteDaoImpl.insertNote(
-                    Note(
-                        noteId = noteId,
-                        title = title,
-                        body = body,
-                        time = System.currentTimeMillis())
-                )
+            noteRepository.getAllNotesByTitle().collect {noteList ->
+                _notesScreen.update {
+                    it.copy(
+                        notes = noteList,
+                    )
+                }
             }
         }
     }
 
-
-    suspend fun getNoteById(noteId: Int): Note {
-        return noteDaoImpl.getNoteById(noteId)
-    }
-
     fun deleteNote(note: Note){
         viewModelScope.launch {
-            noteDaoImpl.deleteNote(note)
+            noteRepository.deleteNote(note)
         }
     }
 }

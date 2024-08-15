@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">RubyNotes</string>
+    <string name="app_name">Ruby Notes</string>
     <string name="title_activity_note">NoteActivity</string>
 </resources>

@@ -1,6 +1,5 @@
 package com.mohamed.rubynotes.data
 
-import androidx.lifecycle.LiveData
 import androidx.room.AutoMigration
 import androidx.room.Dao
 import androidx.room.Database

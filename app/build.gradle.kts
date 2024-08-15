@@ -26,8 +26,6 @@ android {
             useSupportLibrary = true
         }
 
-
-
         kapt{
             arguments {
                 arg("room.schemaLocation", "$projectDir/schemas")
@@ -110,6 +108,8 @@ dependencies {
     implementation (libs.hilt.android)
     kapt (libs.hilt.android.compiler)
     kapt (libs.androidx.hilt.compiler)
+
+    implementation(libs.androidx.core.splashscreen)
 }
 
 kapt{
