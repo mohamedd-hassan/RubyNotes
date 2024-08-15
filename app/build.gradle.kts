@@ -1,14 +1,18 @@
-
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id ("kotlin-kapt")
     id ("org.jetbrains.kotlin.plugin.serialization")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
     namespace = "com.mohamed.rubynotes"
     compileSdk = 34
+
+    buildFeatures{
+        buildConfig = true
+    }
 
     defaultConfig {
         applicationId = "com.mohamed.rubynotes"
@@ -22,6 +26,8 @@ android {
             useSupportLibrary = true
         }
 
+
+
         kapt{
             arguments {
                 arg("room.schemaLocation", "$projectDir/schemas")
@@ -31,11 +37,13 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
-//            proguardFiles(
-//                getDefaultProguardFile("proguard-android-optimize.txt"),
-//                "proguard-rules.pro"
-//            )
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
@@ -94,4 +102,16 @@ dependencies {
 
     implementation (libs.kotlinx.coroutines.play.services)
     implementation(libs.androidx.concurrent.futures.ktx)
+
+    implementation(libs.coil)
+
+    implementation(libs.richeditor.compose)
+
+    implementation (libs.hilt.android)
+    kapt (libs.hilt.android.compiler)
+    kapt (libs.androidx.hilt.compiler)
+}
+
+kapt{
+    correctErrorTypes = true
 }

@@ -24,7 +24,7 @@ data class Note(
 @Dao
 interface NoteDao{
     @Query("SELECT * FROM NOTE ORDER BY title ASC")
-    fun getAllNotesByTitle(): LiveData<List<Note>>
+    fun getAllNotesByTitle(): Flow<List<Note>>
 
     @Query("SELECT * FROM NOTE ORDER BY title DESC")
     fun getAllNotesByTitleDesc(): Flow<List<Note>>

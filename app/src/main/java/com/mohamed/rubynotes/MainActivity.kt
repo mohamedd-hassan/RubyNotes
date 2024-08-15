@@ -12,11 +12,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.mohamed.rubynotes.ui.screens.addNote.NoteScreen
+import com.google.ai.client.generativeai.GenerativeModel
+import com.mohamed.rubynotes.ui.addEditNote.NoteScreen
 import com.mohamed.rubynotes.ui.theme.RubyNotesTheme
 import kotlinx.serialization.Serializable
-import com.mohamed.rubynotes.ui.screens.homeScreen.HomeScreen
-import com.mohamed.rubynotes.ui.screens.homeScreen.HomeScreenViewModel
+import com.mohamed.rubynotes.ui.homeScreen.HomeScreen
+import com.mohamed.rubynotes.ui.homeScreen.HomeScreenViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
