@@ -1,5 +1,6 @@
 package com.mohamed.rubynotes.ui.homeScreen
 
+import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -21,7 +22,7 @@ import com.mohamed.rubynotes.ui.navigation.AddEditNote
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeScreenViewModel,
+    viewModel: HomeScreenViewModel ,
     navController: NavController,
     modifier: Modifier = Modifier
 ){
@@ -45,7 +46,7 @@ fun HomeScreenContent(
         modifier = modifier,
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                navController.navigate(AddEditNote(noteId = -1))
+                navController.navigate(AddEditNote(-1))
             }) {
                 Icon(imageVector = Icons.Filled.Add, contentDescription = "Add New Note Button")
             }
@@ -64,7 +65,10 @@ fun HomeScreenContent(
             items(notes.notes, key = {item -> item.noteId!! }) {note ->
                 NoteCard(note = note,
                     onCardClick = {
-                        navController.navigate(AddEditNote(noteId = note.noteId?:-1))
+                        navController.navigate(
+                            AddEditNote(noteId = note.noteId!!)
+                        )
+                        Log.d("State", note.noteId.toString() + "from Home Card")
                     },
                     viewModel,
                     onCardLongClick = { /*TODO*/},

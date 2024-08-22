@@ -17,6 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,6 +26,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mohamed.rubynotes.data.Note
 import com.mohamed.rubynotes.ui.homeScreen.HomeScreenViewModel
+import com.mohamedrejeb.richeditor.model.rememberRichTextState
+import com.mohamedrejeb.richeditor.ui.material3.RichText
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -35,6 +38,10 @@ fun NoteCard(
     onCardLongClick: ()->Unit,
     modifier: Modifier = Modifier
 ){
+    val noteBody = rememberRichTextState()
+    LaunchedEffect(key1 = Unit) {
+        noteBody.setHtml(note.body)
+    }
     Card(
         colors = CardDefaults.cardColors(
             containerColor = Color(244,194,194)
@@ -66,7 +73,7 @@ fun NoteCard(
                     thickness = 1.dp,
                     color = Color.Gray
                 )
-                Text(text = note.body,
+                RichText(state = noteBody,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 8,
                     modifier = Modifier.padding(start = 4.dp, top = 8.dp))

@@ -3,7 +3,7 @@ package com.mohamed.rubynotes.ui.addEditNote
 import android.graphics.Bitmap
 
 data class NoteState(
-    var noteId: Int = -1,
+    var noteId: Int? = null,
     var noteTitle: String? = "",
     var noteBody: String = "",
     var timeModified: Long = 0,

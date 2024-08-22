@@ -1,5 +1,8 @@
 package com.mohamed.rubynotes.ui.addEditNote
 
+import android.util.Log
+import androidx.compose.runtime.LaunchedEffect
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mohamed.rubynotes.data.Note
@@ -11,19 +14,24 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
 @HiltViewModel
 class AddEditNoteViewModel @Inject
-constructor(private val noteRepository: NoteRepository): ViewModel() {
+constructor(
+    private val noteRepository: NoteRepository,
+): ViewModel() {
 
     private val _note = MutableStateFlow(NoteState())
     val note = _note.asStateFlow()
+
+    var noteId: Int? = null
 
     fun insertNote(
         title: String?,
         body: String,
         noteId: Int){
         viewModelScope.launch {
-            if (title != "" || body != ""){
+            if (title != "" || body != "<br>"){
                 if (noteId == -1){
                     noteRepository.insertNote(
                         Note(
@@ -44,10 +52,24 @@ constructor(private val noteRepository: NoteRepository): ViewModel() {
         }
     }
 
-    fun getNoteById(noteId: Int) {
+    fun getNoteById(
+        noteId: Int
+    ) {
         viewModelScope.launch {
-            if (noteId != -1){
+            if(noteId == -1){
+                Log.d("AddEdit", "Inside If")
+                _note.update {
+                    it.copy(
+                        noteId = -1,
+                        noteTitle = "",
+                        noteBody = "",
+                        timeModified = 0
+                    )
+                }
+            }
+            else{
                 val noteRetrieved = noteRepository.getNoteById(noteId)
+                Log.d("AddEdit", "Inside Else")
                 _note.update {
                     it.copy(
                         noteId = noteRetrieved.noteId!!,
@@ -57,6 +79,7 @@ constructor(private val noteRepository: NoteRepository): ViewModel() {
                     )
                 }
             }
+            Log.d("AddEdit", "Inside Else")
         }
     }
 }
