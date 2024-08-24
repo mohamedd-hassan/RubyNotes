@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         applicationId = "com.mohamed.rubynotes"
-        minSdk = 24
+        minSdk = 21
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -45,6 +45,7 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -111,6 +112,11 @@ dependencies {
     kapt (libs.androidx.hilt.compiler)
 
     implementation(libs.androidx.core.splashscreen)
+
+    implementation(libs.androidx.foundation)
+
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
+
 }
 
 kapt{

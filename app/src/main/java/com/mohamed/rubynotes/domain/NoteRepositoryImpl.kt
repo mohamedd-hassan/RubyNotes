@@ -11,9 +11,9 @@ class NoteRepositoryImpl(
 
     override fun getAllNotesByTitleDesc(): Flow<List<Note>> = noteDao.getAllNotesByTitleDesc()
 
-    override fun getAllNotesByTime(): Flow<List<Note>> = noteDao.getAllNotesByTime()
+    override fun getAllNotesByTime(): Flow<List<Note>> = noteDao.getAllNotesByDateCreated()
 
-    override fun getAllNotesByTimeDesc(): Flow<List<Note>> = noteDao.getAllNotesByTimeDesc()
+    override fun getAllNotesByTimeDesc(): Flow<List<Note>> = noteDao.getAllNotesByDateCreatedDesc()
 
     override suspend fun insertNote(note: Note) = noteDao.insertNote(note = note)
 

@@ -1,3 +1,4 @@
+
 package com.mohamed.rubynotes.ui.homeScreen
 
 import android.util.Log
@@ -17,7 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.mohamed.rubynotes.ui.homeScreen.composables.NoteCard
+import com.mohamed.rubynotes.ui.homeScreen.composables.NoteGridCard
 import com.mohamed.rubynotes.ui.navigation.AddEditNote
 
 @Composable
@@ -54,25 +55,28 @@ fun HomeScreenContent(
         floatingActionButtonPosition = FabPosition.End
     ) { padding ->
         LazyVerticalStaggeredGrid(
+            modifier = Modifier,
             columns = StaggeredGridCells.Fixed(2),
-
             contentPadding = PaddingValues(
                 start = 4.dp,
                 end = 4.dp,
                 top = 4.dp,
-                bottom = padding.calculateBottomPadding()
-        )) {
+                bottom = padding.calculateBottomPadding()),
+        ) {
             items(notes.notes, key = {item -> item.noteId!! }) {note ->
-                NoteCard(note = note,
+                NoteGridCard(note = note,
+                    isPinned =  note.isPinned,
+                    isLocked =  note.isLocked,
                     onCardClick = {
-                        navController.navigate(
-                            AddEditNote(noteId = note.noteId!!)
-                        )
-                        Log.d("State", note.noteId.toString() + "from Home Card")
-                    },
-                    viewModel,
-                    onCardLongClick = { /*TODO*/},
-                )
+                        if (!note.isLocked){
+                            navController.navigate(
+                                AddEditNote(noteId = note.noteId!!)
+                            )
+                        }
+                    }
+                ){
+
+                }
             }
         }
     }

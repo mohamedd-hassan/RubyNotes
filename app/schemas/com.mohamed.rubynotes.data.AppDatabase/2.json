@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "14930952cee913f18751dd1acb7123f1",
+    "identityHash": "352dde2a014c62109623d92777d33928",
     "entities": [
       {
         "tableName": "Note",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`noteId` INTEGER, `title` TEXT, `body` TEXT NOT NULL, `time` INTEGER NOT NULL, PRIMARY KEY(`noteId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`noteId` INTEGER, `title` TEXT, `body` TEXT NOT NULL, `dateCreated` TEXT, `dateModified` TEXT, `isPinned` INTEGER NOT NULL, `isLocked` INTEGER NOT NULL, PRIMARY KEY(`noteId`))",
         "fields": [
           {
             "fieldPath": "noteId",
@@ -27,8 +27,26 @@
             "notNull": true
           },
           {
-            "fieldPath": "time",
-            "columnName": "time",
+            "fieldPath": "dateCreated",
+            "columnName": "dateCreated",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dateModified",
+            "columnName": "dateModified",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isPinned",
+            "columnName": "isPinned",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isLocked",
+            "columnName": "isLocked",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -46,7 +64,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '14930952cee913f18751dd1acb7123f1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '352dde2a014c62109623d92777d33928')"
     ]
   }
 }

@@ -21,7 +21,8 @@ object AppModule {
             app,
             AppDatabase::class.java,
             "RubyDB"
-        ).build()
+        ).fallbackToDestructiveMigration()
+            .build()
     }
 
     @Provides

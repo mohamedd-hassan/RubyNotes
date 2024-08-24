@@ -7,11 +7,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mohamed.rubynotes.data.Note
 import com.mohamed.rubynotes.domain.NoteRepository
+import com.mohamedrejeb.richeditor.model.RichTextState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 
@@ -28,24 +30,36 @@ constructor(
 
     fun insertNote(
         title: String?,
-        body: String,
-        noteId: Int){
+        body: RichTextState,
+        isPinned: Boolean,
+        isLocked: Boolean,
+        dateCreated: LocalDateTime,
+        noteId: Int,
+        dateModified: LocalDateTime){
         viewModelScope.launch {
-            if (title != "" || body != "<br>"){
+            if (title != "" || body.toMarkdown().isNotBlank()){
                 if (noteId == -1){
                     noteRepository.insertNote(
                         Note(
                             title = title,
-                            body = body,
-                            time = System.currentTimeMillis())
+                            body = body.toHtml(),
+                            dateCreated = LocalDateTime.now(),
+                            dateModified = LocalDateTime.now(),
+                            isPinned = false,
+                            isLocked = false
+                        )
                     )
                 } else{
                     noteRepository.insertNote(
                         Note(
                             noteId = noteId,
                             title = title,
-                            body = body,
-                            time = System.currentTimeMillis())
+                            body = body.toHtml(),
+                            dateCreated = dateCreated,
+                            dateModified = dateModified,
+                            isPinned = isPinned,
+                            isLocked = isLocked
+                        )
                     )
                 }
             }
@@ -63,7 +77,7 @@ constructor(
                         noteId = -1,
                         noteTitle = "",
                         noteBody = "",
-                        timeModified = 0
+                        dateModified = LocalDateTime.MIN
                     )
                 }
             }
@@ -75,7 +89,10 @@ constructor(
                         noteId = noteRetrieved.noteId!!,
                         noteTitle = noteRetrieved.title,
                         noteBody = noteRetrieved.body,
-                        timeModified = noteRetrieved.time
+                        dateModified = noteRetrieved.dateModified!!,
+                        dateCreated = noteRetrieved.dateCreated!!,
+                        isPinned = noteRetrieved.isPinned,
+                        isLocked = noteRetrieved.isLocked
                     )
                 }
             }
