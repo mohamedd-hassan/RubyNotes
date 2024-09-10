@@ -36,6 +36,24 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
+    fun pinNote(
+        notes: List<Note>
+    ){
+        viewModelScope.launch {
+            notes.forEach { note ->
+                noteRepository.insertNote(Note(
+                    noteId = note.noteId,
+                    title = note.title,
+                    body = note.body,
+                    isPinned = !note.isPinned,
+                    isLocked = note.isLocked,
+                    dateModified = note.dateModified,
+                    dateCreated = note.dateCreated)
+                )
+            }
+        }
+    }
+
     fun deleteNote(notes: List<Note>){
         viewModelScope.launch {
             noteRepository.deleteNote(notes)

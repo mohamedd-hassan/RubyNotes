@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
@@ -16,23 +18,18 @@ import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Sort
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowDownward
-import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -42,8 +39,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mohamed.rubynotes.data.Note
+import com.mohamed.rubynotes.ui.composables.SortOrderButton
 import com.mohamed.rubynotes.ui.homeScreen.composables.HomeBottomBarSelected
 import com.mohamed.rubynotes.ui.homeScreen.composables.HomeTopBar
 import com.mohamed.rubynotes.ui.homeScreen.composables.HomeTopBarSelected
@@ -58,7 +57,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior
 ){
-    val notes by viewModel.notesScreen.collectAsState()
+    val notes by viewModel.notesScreen.collectAsStateWithLifecycle()
 
     HomeScreenContent(notes = notes,
         navController,
@@ -75,10 +74,15 @@ fun HomeScreenContent(
     navController: NavController,
     viewModel: HomeScreenViewModel,
     modifier: Modifier = Modifier,
-    scrollBehavior: TopAppBarScrollBehavior
+    scrollBehavior: TopAppBarScrollBehavior,
+
 ){
     var ascending by remember {
         mutableStateOf(false)
+    }
+
+    val notesFiltered = remember {
+        notes.notes.filter{!it.isLocked}
     }
 
     var orderType by remember {
@@ -95,9 +99,14 @@ fun HomeScreenContent(
         "Date Modified"
     )
 
+    var gridMode by remember {
+        mutableStateOf(true)
+    }
+
     var isInSelectionMode by remember {
         mutableStateOf(false)
     }
+
     val selectedNotes = remember {
         mutableStateListOf<Note>()
     }
@@ -142,9 +151,11 @@ fun HomeScreenContent(
                 )
             } else{
                 HomeTopBar(
-                    scrollBehavior
+                    scrollBehavior,
+                    isGrid = gridMode,
+                    onSettingsClick = {}
                 ) {
-                    /*TODO*/
+                    gridMode = !gridMode
                 }
             }
         },
@@ -152,91 +163,96 @@ fun HomeScreenContent(
         bottomBar = {
             if (isInSelectionMode){
                 HomeBottomBarSelected(
-                    onPinClick = {},
+                    onPinClick = {
+                        viewModel.pinNote(selectedNotes)
+//                        resetSelectionMode()
+                    },
                     onLockClick = {}
                 ) {
                   viewModel.deleteNote(selectedNotes)
+//                    resetSelectionMode()
                 }
             }
         }
 
     ) { padding ->
+        if (gridMode){
+            LazyVerticalStaggeredGrid(
+                modifier = Modifier,
+                columns = StaggeredGridCells.Fixed(2),
+                contentPadding = PaddingValues(
+                    start = 4.dp,
+                    end = 4.dp,
+                    top = padding.calculateTopPadding(),
+                    bottom = padding.calculateBottomPadding()),
+            ) {
 
+                item(span = StaggeredGridItemSpan.FullLine) {
 
-        LazyVerticalStaggeredGrid(
-            modifier = Modifier,
-            columns = StaggeredGridCells.Fixed(2),
-            contentPadding = PaddingValues(
-                start = 4.dp,
-                end = 4.dp,
-                top = padding.calculateTopPadding(),
-                bottom = padding.calculateBottomPadding()),
-        ) {
-
-            item(span = StaggeredGridItemSpan.FullLine) {
-
-                Row(
-                    modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.End
-                ) {
-
-                    Box {
-                        TextButton(onClick = { expanded = true }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Outlined.Sort,
-                                contentDescription = "Sort Icon"
-                            )
-                            Text(text = orderType)
+                    Row(
+                        modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Box {
+                            TextButton(onClick = { expanded = true }) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Outlined.Sort,
+                                    contentDescription = "Sort Icon"
+                                )
+                                Text(text = orderType)
+                            }
+                            DropdownMenu(
+                                expanded = expanded, onDismissRequest = { expanded = false }) {
+                                orderTypes.forEach {
+                                    DropdownMenuItem(
+                                        text = { Text(text = it)},
+                                        onClick = {
+                                            viewModel.getAllNotes(it.replace(" ", "") +
+                                                    if (ascending) "Asc" else "Desc")
+                                            orderType = it
+                                            expanded = false
+                                        }
+                                    )
+                                }
+                            }
                         }
-                        DropdownMenu(
-                            expanded = expanded, onDismissRequest = { expanded = false }) {
-                            orderTypes.forEach {
-                                DropdownMenuItem(
-                                    text = { Text(text = it)},
-                                    onClick = {
-                                        viewModel.getAllNotes(it.replace(" ", "") +
-                                        if (ascending) "Asc" else "Desc")
-                                        orderType = it
-                                        expanded = false
-                                    }
+
+                        VerticalDivider(modifier = Modifier
+                            .height(20.dp)
+                            .padding(start = 8.dp, end = 8.dp))
+
+                        SortOrderButton(ascending = ascending){
+                            ascending = !ascending
+                            viewModel.getAllNotes(orderType.replace(" ", "") +
+                                    if (ascending) "Asc" else "Desc")
+                        }
+                    }
+                }
+
+                items(notes.notes, key = {item -> item.noteId!! }) {note ->
+
+                    val isSelected = selectedNotes.contains(note)
+
+                    NoteGridCard(note = note,
+                        isPinned =  note.isPinned,
+                        isLocked =  note.isLocked,
+                        isInSelectionMode = isInSelectionMode,
+                        isSelected = isSelected,
+                        onCardClick = {
+                            if (isInSelectionMode) {
+                                if (isSelected) {
+                                    selectedNotes.remove(note)
+                                } else {
+                                    selectedNotes.add(note)
+                                }
+                            } else {
+                                navController.navigate(
+                                    AddEditNote(noteId = note.noteId!!)
                                 )
                             }
                         }
-                    }
-
-                    VerticalDivider(modifier = Modifier
-                        .height(20.dp)
-                        .padding(start = 8.dp, end = 8.dp))
-
-                    IconButton(onClick = {
-                        ascending = !ascending
-                        viewModel.getAllNotes(orderType.replace(" ", "") +
-                                if (ascending) "Asc" else "Desc")
-                    }) {
-                        Icon(
-                            imageVector = if (ascending){
-                                Icons.Filled.ArrowUpward
-                            } else{
-                                   Icons.Filled.ArrowDownward
-                                  },
-                            contentDescription = "Sort Icon"
-                        )
-                    }
-
-                }
-            }
-
-            items(notes.notes, key = {item -> item.noteId!! }) {note ->
-
-                val isSelected = selectedNotes.contains(note)
-
-                NoteGridCard(note = note,
-                    isPinned =  note.isPinned,
-                    isLocked =  note.isLocked,
-                    isInSelectionMode = isInSelectionMode,
-                    isSelected = isSelected,
-                    onCardClick = {
+                    ){
                         if (isInSelectionMode) {
                             if (isSelected) {
                                 selectedNotes.remove(note)
@@ -244,23 +260,98 @@ fun HomeScreenContent(
                                 selectedNotes.add(note)
                             }
                         } else {
-                            if (!note.isLocked){
+                            isInSelectionMode = true
+                            selectedNotes.add(note)
+                        }
+                    }
+                }
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier,
+                contentPadding = PaddingValues(
+                    start = 4.dp,
+                    end = 4.dp,
+                    top = padding.calculateTopPadding(),
+                    bottom = padding.calculateBottomPadding()),
+            ) {
+
+                item{
+
+                    Row(
+                        modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Box {
+                            TextButton(onClick = { expanded = true }) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Outlined.Sort,
+                                    contentDescription = "Sort Icon"
+                                )
+                                Text(text = orderType)
+                            }
+                            DropdownMenu(
+                                expanded = expanded, onDismissRequest = { expanded = false }) {
+                                orderTypes.forEach {
+                                    DropdownMenuItem(
+                                        text = { Text(text = it)},
+                                        onClick = {
+                                            viewModel.getAllNotes(it.replace(" ", "") +
+                                                    if (ascending) "Asc" else "Desc")
+                                            orderType = it
+                                            expanded = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
+
+                        VerticalDivider(modifier = Modifier
+                            .height(20.dp)
+                            .padding(start = 8.dp, end = 8.dp))
+
+                        SortOrderButton(ascending = ascending){
+                            ascending = !ascending
+                            viewModel.getAllNotes(orderType.replace(" ", "") +
+                                    if (ascending) "Asc" else "Desc")
+                        }
+                    }
+                }
+
+                items(notes.notes, key = {item -> item.noteId!! }) {note ->
+
+                    val isSelected = selectedNotes.contains(note)
+
+                    NoteGridCard(note = note,
+                        isPinned =  note.isPinned,
+                        isLocked =  note.isLocked,
+                        isInSelectionMode = isInSelectionMode,
+                        isSelected = isSelected,
+                        onCardClick = {
+                            if (isInSelectionMode) {
+                                if (isSelected) {
+                                    selectedNotes.remove(note)
+                                } else {
+                                    selectedNotes.add(note)
+                                }
+                            } else {
                                 navController.navigate(
                                     AddEditNote(noteId = note.noteId!!)
                                 )
                             }
                         }
-                    }
-                ){
-                    if (isInSelectionMode) {
-                        if (isSelected) {
-                            selectedNotes.remove(note)
+                    ){
+                        if (isInSelectionMode) {
+                            if (isSelected) {
+                                selectedNotes.remove(note)
+                            } else {
+                                selectedNotes.add(note)
+                            }
                         } else {
+                            isInSelectionMode = true
                             selectedNotes.add(note)
                         }
-                    } else {
-                        isInSelectionMode = true
-                        selectedNotes.add(note)
                     }
                 }
             }
