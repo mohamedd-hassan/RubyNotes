@@ -12,9 +12,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PushPin
 import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.rounded.CheckCircle
+import androidx.compose.material.icons.rounded.RadioButtonUnchecked
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,7 +28,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.mohamed.rubynotes.data.Note
-import com.mohamed.rubynotes.ui.homeScreen.HomeScreenViewModel
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
 
@@ -36,8 +38,10 @@ fun NoteGridCard(
     note: Note,
     isPinned: Boolean,
     isLocked: Boolean,
+    isInSelectionMode: Boolean,
+    isSelected:Boolean,
     onCardClick: ()->Unit,
-    onCardLongClick: ()->Unit,
+    onCardLongClick: ()->Unit
 ){
 
     val noteBody = rememberRichTextState()
@@ -45,9 +49,6 @@ fun NoteGridCard(
         noteBody.setHtml(note.body)
     }
     Card(
-//            elevation = CardDefaults.cardElevation(
-//                defaultElevation = 2.dp
-//            ),
         colors = if (isLocked) {CardDefaults.cardColors(
             containerColor = Color.Black,)
         } else{
@@ -66,6 +67,23 @@ fun NoteGridCard(
 
     ) {
         Box(modifier = Modifier.fillMaxSize()){
+            if (isInSelectionMode) {
+                if (isSelected) {
+                    Icon(
+                        imageVector = Icons.Rounded.CheckCircle,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.align(Alignment.TopStart).padding(8.dp)
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Rounded.RadioButtonUnchecked,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.outline,
+                        modifier = Modifier.align(Alignment.TopStart).padding(8.dp)
+                    )
+                }
+            }
             if (isLocked){
                 Icon(
                     imageVector = Icons.Outlined.Lock,
@@ -104,7 +122,8 @@ fun NoteGridCard(
                     RichText(state = noteBody,
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 8,
-                        modifier = Modifier.padding(start = 4.dp, top = 8.dp))
+                        modifier = Modifier.padding(start = 4.dp, top = 8.dp)
+                    )
                 }
             }
         }

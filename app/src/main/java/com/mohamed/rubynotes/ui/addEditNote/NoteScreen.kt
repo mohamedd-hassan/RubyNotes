@@ -3,6 +3,7 @@ package com.mohamed.rubynotes.ui.addEditNote
 import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -131,14 +132,18 @@ fun NoteContent(
     }
 
     Scaffold(
-        modifier = Modifier.imePadding(),
+        modifier = Modifier
+//            .imePadding()
+        ,
         bottomBar = {
             NoteBottomRow(state = noteBody)
         }
     ){ it ->
         Column(modifier = Modifier
-            .imePadding()
-            .padding(paddingValues = it)) {
+            .padding(paddingValues = it)
+//            .consumeWindowInsets(it)
+//            .imePadding()
+        ) {
             TextField(value = noteTitle?:"",
                 onValueChange = {noteTitle = it},
                 Modifier.fillMaxWidth(),

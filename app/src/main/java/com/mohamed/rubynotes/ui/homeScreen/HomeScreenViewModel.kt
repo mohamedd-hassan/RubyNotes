@@ -3,6 +3,7 @@ package com.mohamed.rubynotes.ui.homeScreen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mohamed.rubynotes.data.Note
+import com.mohamed.rubynotes.domain.GetNotes
 import com.mohamed.rubynotes.domain.NoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,18 +14,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
-    private val noteRepository: NoteRepository
+    private val noteRepository: NoteRepository,
+    private val notes: GetNotes
 ): ViewModel() {
 
     init {
-        getNotesByTitle()
+        getAllNotes("TitleAsc")
     }
 
     private val _notesScreen = MutableStateFlow(HomeScreenState())
     val notesScreen = _notesScreen.asStateFlow()
-    private fun getNotesByTitle(){
+    fun getAllNotes(noteOrder: String){
         viewModelScope.launch {
-            noteRepository.getAllNotesByTitle().collect {noteList ->
+            notes.invoke(noteOrder).collect {noteList ->
                 _notesScreen.update {
                     it.copy(
                         notes = noteList,
@@ -34,9 +36,9 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
-    fun deleteNote(note: Note){
+    fun deleteNote(notes: List<Note>){
         viewModelScope.launch {
-            noteRepository.deleteNote(note)
+            noteRepository.deleteNote(notes)
         }
     }
 }

@@ -8,9 +8,13 @@ interface NoteRepository {
 
     fun getAllNotesByTitleDesc(): Flow<List<Note>>
 
-    fun getAllNotesByTime(): Flow<List<Note>>
+    fun getAllNotesByDateCreated(): Flow<List<Note>>
 
-    fun getAllNotesByTimeDesc(): Flow<List<Note>>
+    fun getAllNotesByDateCreatedDesc(): Flow<List<Note>>
+
+    fun getAllNotesByDateModified(): Flow<List<Note>>
+
+    fun getAllNotesByDateModifiedDesc(): Flow<List<Note>>
 
     suspend fun insertNote(note: Note)
 
@@ -18,5 +22,5 @@ interface NoteRepository {
 
     suspend fun isEmpty():Boolean
 
-    suspend fun deleteNote(note: Note)
+    suspend fun deleteNote(notes: List<Note>)
 }
