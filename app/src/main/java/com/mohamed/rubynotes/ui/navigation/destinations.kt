@@ -12,3 +12,11 @@ data class AddEditNote(
 
 @Serializable
 object Settings
+
+@Serializable
+object VaultScreen
+
+@Serializable
+data class Search(
+    val inVault: Boolean
+)

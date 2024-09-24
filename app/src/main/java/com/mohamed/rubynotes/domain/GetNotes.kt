@@ -1,6 +1,6 @@
 package com.mohamed.rubynotes.domain
 
-import com.mohamed.rubynotes.data.Note
+import com.mohamed.rubynotes.domain.model.Note
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

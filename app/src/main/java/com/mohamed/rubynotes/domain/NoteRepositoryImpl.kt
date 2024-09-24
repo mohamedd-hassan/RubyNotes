@@ -1,7 +1,7 @@
 package com.mohamed.rubynotes.domain
 
-import com.mohamed.rubynotes.data.Note
 import com.mohamed.rubynotes.data.NoteDao
+import com.mohamed.rubynotes.domain.model.Note
 import kotlinx.coroutines.flow.Flow
 
 class NoteRepositoryImpl(
@@ -18,6 +18,22 @@ class NoteRepositoryImpl(
     override fun getAllNotesByDateModified(): Flow<List<Note>> = noteDao.getAllNotesByDateModified()
 
     override fun getAllNotesByDateModifiedDesc(): Flow<List<Note>> = noteDao.getAllNotesByDateModifiedDesc()
+
+    override fun getLockedNotesByTitle(): Flow<List<Note>> = noteDao.getLockedNotesByTitle()
+
+    override fun getLockedNotesByTitleDesc(): Flow<List<Note>> = noteDao.getLockedNotesByTitleDesc()
+
+    override fun getLockedNotesByDateCreated(): Flow<List<Note>> = noteDao.getLockedNotesByDateCreated()
+
+    override fun getLockedNotesByDateCreatedDesc(): Flow<List<Note>> = noteDao.getLockedNotesByDateCreatedDesc()
+
+    override fun getLockedNotesByDateModified(): Flow<List<Note>> = noteDao.getLockedNotesByDateModified()
+
+    override fun getLockedNotesByDateModifiedDesc(): Flow<List<Note>> = noteDao.getLockedNotesByDateModifiedDesc()
+
+    override suspend fun searchNotes(query: String): Flow<List<Note>> = noteDao.searchNotes(query)
+
+    override suspend fun searchLockedNotes(query: String): Flow<List<Note>> = noteDao.searchLockedNotes(query)
 
     override suspend fun insertNote(note: Note) = noteDao.insertNote(note = note)
 

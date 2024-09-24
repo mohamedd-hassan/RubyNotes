@@ -1,5 +1,6 @@
 package com.mohamed.rubynotes.ui.addEditNote.composables
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,7 +15,6 @@ import androidx.compose.material.icons.filled.FormatColorText
 import androidx.compose.material.icons.filled.FormatItalic
 import androidx.compose.material.icons.filled.FormatSize
 import androidx.compose.material.icons.filled.FormatUnderlined
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Title
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -32,11 +32,9 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.mohamedrejeb.richeditor.model.RichTextState
-import com.mohamedrejeb.richeditor.model.rememberRichTextState
 
 @Composable
 fun NoteBottomRow(modifier: Modifier = Modifier,
@@ -77,11 +75,12 @@ fun NoteBottomRow(modifier: Modifier = Modifier,
         modifier = modifier
             .fillMaxWidth()
             .padding(start = 4.dp, end = 4.dp)
-            .padding(top = 4.dp, bottom = 4.dp),
+            .padding(top = 4.dp, bottom = 4.dp)
+            .background(Color(0xFFEBEBEB)),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
 
-        ControlWrapper(
+        FormatButton(
             selected = boldSelected,
             onChangeClick = { boldSelected = it },
             onClick = onBoldClick
@@ -89,10 +88,10 @@ fun NoteBottomRow(modifier: Modifier = Modifier,
             Icon(
                 imageVector = Icons.Default.FormatBold,
                 contentDescription = "Bold Control",
-                tint = MaterialTheme.colorScheme.onPrimary
+                tint = if (boldSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
             )
         }
-        ControlWrapper(
+        FormatButton(
             selected = italicSelected,
             onChangeClick = { italicSelected = it },
             onClick = onItalicClick
@@ -100,10 +99,10 @@ fun NoteBottomRow(modifier: Modifier = Modifier,
             Icon(
                 imageVector = Icons.Default.FormatItalic,
                 contentDescription = "Italic Control",
-                tint = MaterialTheme.colorScheme.onPrimary
+                tint = if (italicSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
             )
         }
-        ControlWrapper(
+        FormatButton(
             selected = underlineSelected,
             onChangeClick = { underlineSelected = it },
             onClick = onUnderlineClick
@@ -111,10 +110,10 @@ fun NoteBottomRow(modifier: Modifier = Modifier,
             Icon(
                 imageVector = Icons.Default.FormatUnderlined,
                 contentDescription = "Underline Control",
-                tint = MaterialTheme.colorScheme.onPrimary
+                tint = if (underlineSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
             )
         }
-        ControlWrapper(
+        FormatButton(
             selected = titleSelected,
             onChangeClick = { titleSelected = it },
             onClick = onTitleClick
@@ -122,10 +121,10 @@ fun NoteBottomRow(modifier: Modifier = Modifier,
             Icon(
                 imageVector = Icons.Default.Title,
                 contentDescription = "Title Control",
-                tint = MaterialTheme.colorScheme.onPrimary
+                tint = if (titleSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
             )
         }
-        ControlWrapper(
+        FormatButton(
             selected = subtitleSelected,
             onChangeClick = { subtitleSelected = it },
             onClick = onSubtitleClick
@@ -133,10 +132,10 @@ fun NoteBottomRow(modifier: Modifier = Modifier,
             Icon(
                 imageVector = Icons.Default.FormatSize,
                 contentDescription = "Subtitle Control",
-                tint = MaterialTheme.colorScheme.onPrimary
+                tint = if (subtitleSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
             )
         }
-        ControlWrapper(
+        FormatButton(
             selected = textColorSelected,
             onChangeClick = { textColorSelected = it },
             onClick = onTextColorClick
@@ -144,10 +143,10 @@ fun NoteBottomRow(modifier: Modifier = Modifier,
             Icon(
                 imageVector = Icons.Default.FormatColorText,
                 contentDescription = "Text Color Control",
-                tint = MaterialTheme.colorScheme.onPrimary
+                tint = if (textColorSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
             )
         }
-        ControlWrapper(
+        FormatButton(
             selected = alignmentSelected == 0,
             onChangeClick = { alignmentSelected = 0 },
             onClick = onStartAlignClick
@@ -155,10 +154,10 @@ fun NoteBottomRow(modifier: Modifier = Modifier,
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.FormatAlignLeft,
                 contentDescription = "Start Align Control",
-                tint = MaterialTheme.colorScheme.onPrimary
+                tint = if (alignmentSelected == 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
             )
         }
-        ControlWrapper(
+        FormatButton(
             selected = alignmentSelected == 1,
             onChangeClick = { alignmentSelected = 1 },
             onClick = onCenterAlignClick
@@ -166,10 +165,10 @@ fun NoteBottomRow(modifier: Modifier = Modifier,
             Icon(
                 imageVector = Icons.Default.FormatAlignCenter,
                 contentDescription = "Center Align Control",
-                tint = MaterialTheme.colorScheme.onPrimary
+                tint = if (alignmentSelected == 1) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
             )
         }
-        ControlWrapper(
+        FormatButton(
             selected = alignmentSelected == 2,
             onChangeClick = { alignmentSelected = 2 },
             onClick = onEndAlignClick
@@ -177,17 +176,18 @@ fun NoteBottomRow(modifier: Modifier = Modifier,
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.FormatAlignRight,
                 contentDescription = "End Align Control",
-                tint = MaterialTheme.colorScheme.onPrimary
+                tint = if (alignmentSelected == 2) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
             )
         }
-        ControlWrapper(
+        FormatButton(
             selected = toggleOrderedList,
             onChangeClick = { toggleOrderedList = it},
             onClick = onToggleOrderedList) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.List,
                 contentDescription = "Order List Button",
-                tint = MaterialTheme.colorScheme.onPrimary)
+                tint = if (toggleOrderedList) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+            )
         }
     }
 }

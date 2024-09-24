@@ -25,6 +25,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
@@ -33,6 +35,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.mohamed.rubynotes.ui.addEditNote.composables.NoteBottomRow
+import com.mohamed.rubynotes.ui.theme.poppinsFamily
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichTextEditor
 import com.mohamedrejeb.richeditor.ui.material3.RichTextEditorDefaults
@@ -92,7 +95,7 @@ fun NoteContent(
 
     val formatter = DateTimeFormatter.ofPattern("d MMM uuuu hh:mm a")
 
-    noteBody.config.listIndent = 15
+//    noteBody.config.listIndent = 15
 
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -154,6 +157,11 @@ fun NoteContent(
                     unfocusedContainerColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent
+                ),
+                textStyle = TextStyle(
+                    fontFamily = poppinsFamily,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 20.sp
                 )
             )
             Row (
@@ -176,7 +184,8 @@ fun NoteContent(
                     color = Color.Gray,
                     fontSize = 12.sp)
             }
-            RichTextEditor(state = noteBody,
+            RichTextEditor(
+                state = noteBody,
                 Modifier.fillMaxSize(),
                 colors = RichTextEditorDefaults.richTextEditorColors(
                     containerColor = Color.Transparent,
