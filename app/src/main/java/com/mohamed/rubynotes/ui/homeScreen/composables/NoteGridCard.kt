@@ -96,7 +96,7 @@ fun NoteGridCard(
                         }
                     }
                     Text(
-                        text = if (note.title == "") note.dateCreated!!.format(DateTimeFormatter.ISO_DATE) else note.title!! ,
+                        text = if (note.title == "") "Title" else note.title!! ,
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
                         modifier = Modifier
