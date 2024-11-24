@@ -46,20 +46,8 @@ fun HomeTopBar(
                   style = Typography.titleLarge,
                   modifier = Modifier.padding(start = 4.dp))
             } },
-        navigationIcon = {
-            IconButton(
-                onClick = {}
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.AccountCircle,
-                    contentDescription = "Search Icon"
-                )
-            }
-        },
-        actions = {
-            SettingsButton (onClick = onSettingsClick)
-            VaultButton(onVaultClick)
-        },
+        navigationIcon = { SettingsButton (onClick = onSettingsClick) },
+        actions = { VaultButton(onVaultClick) },
         scrollBehavior = scrollBehavior,
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer

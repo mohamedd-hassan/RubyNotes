@@ -189,8 +189,8 @@ fun NotesScreenContent(
                 },
                 onVaultClick = {
                     promptManager.showBiometricPrompt(
-                        title = "Go To Vault Screen",
-                        description = "Go To Vault Screen",
+                        title = "Access Your Vault",
+                        description = "Verify Credentials to access vault",
                         context = context
                     )
                 }
