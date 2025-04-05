@@ -1,19 +1,13 @@
 package com.mohamed.rubynotes.utils
 
-import android.app.Activity
 import android.app.KeyguardManager
 import android.content.Context
-import android.content.Intent
 import android.os.Build
-import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
 import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import androidx.biometric.BiometricPrompt
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat.startActivityForResult
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow

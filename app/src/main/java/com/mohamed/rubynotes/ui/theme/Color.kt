@@ -15,8 +15,8 @@ val tertiaryLight = Color(0xFFA7A7A9)
 val tertiaryContainerLight = Color(0xFFE7E8EB)
 val backgroundLight = Color(0xFFF2F2F2)
 
-val primaryContainerDark = Color
-val secondaryDark = Color
-val secondaryContainerDark = Color
-val tertiaryDark = Color
+val primaryContainerDark = Color(0xFF242425)
+val secondaryDark = Color(0xFFDBDBDB)
+val secondaryContainerDark = Color(0xFFE7E8EB)
+val tertiaryDark = Color(0xFFE9EAF0)
 val backgroundDark  = Color(0xFF0D0D0D)

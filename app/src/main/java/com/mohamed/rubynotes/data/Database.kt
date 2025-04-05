@@ -9,8 +9,6 @@ import com.mohamed.rubynotes.domain.model.Note
 import java.time.LocalDateTime
 
 
-
-
 @Database(
     entities = [
         Note::class

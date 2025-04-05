@@ -19,7 +19,7 @@ val poppinsFamily = FontFamily(
 // Set of Material typography styles to start with
 val Typography = Typography(
     titleLarge = TextStyle(
-        color = Color.Black,
+       // color = Color.Black,
         fontFamily = poppinsFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 16.sp,
@@ -27,7 +27,7 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     ),
     labelLarge = TextStyle(
-        color = Color.Black,
+      //  color = Color.Black,
         fontFamily = poppinsFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 15.sp,

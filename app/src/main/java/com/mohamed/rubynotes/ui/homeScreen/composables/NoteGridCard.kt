@@ -31,10 +31,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mohamed.rubynotes.domain.model.Note
-import com.mohamed.rubynotes.ui.theme.Typography
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
-import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -118,7 +116,8 @@ fun NoteGridCard(
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 8,
                     modifier = Modifier.padding(start = 4.dp, top = 8.dp, bottom = 16.dp),
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.secondary
                 )
             }
         }

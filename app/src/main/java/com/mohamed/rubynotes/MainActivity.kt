@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         val homeScreenViewModel = ViewModelProvider(this)[HomeScreenViewModel::class.java]
         val addEditNoteViewModel = ViewModelProvider(this)[AddEditNoteViewModel::class.java]
         installSplashScreen()
-        enableEdgeToEdge(statusBarStyle = SystemBarStyle.light(Color(255,255,255,1).toArgb().hashCode(), Color.Transparent.hashCode()))
+        enableEdgeToEdge(statusBarStyle = SystemBarStyle.auto(lightScrim = Color.White.toArgb(), darkScrim = Color(0xFF242425).toArgb()))
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         setContent {
             RubyNotesTheme {
@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
                     color = Color.White
                 ) {
                     Box(
-                        modifier = Modifier.safeContentPadding()
+                        modifier = Modifier
                     ) {
                         NavHost(navController = navController,
                             startDestination = HomeScreen) {
@@ -96,6 +96,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @Deprecated("This method has been deprecated in favor of using the Activity Result API\n      which brings increased type safety via an {@link ActivityResultContract} and the prebuilt\n      contracts for common intents available in\n      {@link androidx.activity.result.contract.ActivityResultContracts}, provides hooks for\n      testing, and allow receiving results in separate, testable classes independent from your\n      activity. Use\n      {@link #registerForActivityResult(ActivityResultContract, ActivityResultCallback)}\n      with the appropriate {@link ActivityResultContract} and handling the result in the\n      {@link ActivityResultCallback#onActivityResult(Object) callback}.")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 

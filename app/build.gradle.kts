@@ -1,14 +1,16 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    id ("kotlin-kapt")
+    id("com.google.devtools.ksp")
     id ("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.dagger.hilt.android")
+    alias(libs.plugins.compose.compiler)
+
 }
 
 android {
     namespace = "com.mohamed.rubynotes"
-    compileSdk = 34
+    compileSdk = 35
 
     buildFeatures{
         buildConfig = true
@@ -17,7 +19,7 @@ android {
     defaultConfig {
         applicationId = "com.mohamed.rubynotes"
         minSdk = 23
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -26,10 +28,8 @@ android {
             useSupportLibrary = true
         }
 
-        kapt{
-            arguments {
-                arg("room.schemaLocation", "$projectDir/schemas")
-            }
+        ksp{
+            arg("room.schemaLocation", "$projectDir/schemas")
         }
     }
 
@@ -92,7 +92,7 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     annotationProcessor(libs.androidx.room.compiler)
     //noinspection KaptUsageInsteadOfKsp
-    kapt(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
 
     implementation(libs.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
@@ -110,8 +110,8 @@ dependencies {
 
     implementation (libs.hilt.android)
     //implementation (libs.androidx.hilt.lifecycle.viewmodel)
-    kapt (libs.hilt.android.compiler)
-    kapt (libs.androidx.hilt.compiler)
+    ksp (libs.hilt.android.compiler)
+    ksp (libs.androidx.hilt.compiler)
 
     implementation(libs.androidx.core.splashscreen)
 
@@ -122,8 +122,4 @@ dependencies {
     implementation(libs.androidx.biometric)
 
 
-}
-
-kapt{
-    correctErrorTypes = true
 }
